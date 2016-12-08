@@ -13,10 +13,8 @@
     <div id="root"></div>
     <script type="text/babel">
     var Navbar = React.createClass({
-      getDefaultProps(){
-        return {
-          brand: 'ReactStrap'
-        }
+      change(page) {
+        this.props.change(page); 
       },
       render(){
         return(
@@ -27,13 +25,13 @@
                 </div>
                 <div id="navbar">
                   <ul className="nav navbar-nav">
-                    <li className={(this.props.currentPage=== 'home')? 'active': ''}><a  href="#">Home</a></li>
-                    <li className={(this.props.currentPage=== 'about')? 'active': ''}><a href="#">About</a></li>
-                    <li className={(this.props.currentPage=== 'contact')? 'active': ''}><a href="#">Contact</a></li>
+                    <li className={(this.props.currentPage=== 'home')? 'active': ''}><a onClick= {this.change.bind(this, 'home')} href="#">Home</a></li>
+                    <li className={(this.props.currentPage=== 'about')? 'active': ''}><a onClick= {this.change.bind(this, 'about')} href="#">About</a></li>
+                    <li className={(this.props.currentPage=== 'contact')? 'active': ''}><a onClick= {this.change.bind(this, 'contact')} href="#">Contact</a></li>
                 </ul>
               </div>
             </div>
-            </nav>
+          </nav>
         );
       }
     });
@@ -43,8 +41,9 @@
                   <div>
                     <div className="container">
                       <div className="jumbotron jumbotron-fluid">
-                      <h1>{ this.props.heading}</h1>
+                      <h1>{ this.props.heading }</h1>
                       <p className="lead">{ this.props.text}</p>
+                      <p><a className="btn btn-primary btn-lg" href="#" role="button">Not Jumbo Button</a></p>
                     </div>
                   </div>
                   </div>
@@ -59,7 +58,7 @@
                 pageContent = 'This is the homepage';
               } else if (this.props.currentPage == 'about'){
                 pageContent = 'This is the about page';
-              } else if (this.props.currentPage == 'contatct') {
+              } else if (this.props.currentPage == 'contact') {
                 pageContent = 'This is the contact page';
               } else {
                 pageContent='This is the home page';
@@ -75,9 +74,13 @@
           }
       });
       var Theme = React.createClass({
+        handleChange(page){
+          // alert(page);
+          this.setState({currentPage:page});
+        },
         getInitialState(){
           return {
-            currentPage: 'home'
+            currentPage: 'contact'
           }
         },
         getDefaultProps(){
@@ -88,10 +91,16 @@
           }
         },
         render(){
+          var jumbotron;
+          if(this.state.currentPage == 'home'){
+            jumbotron= <Jumbotron heading= {this.props.heading} text= {this.props.text} />;
+          } else {
+            jumbotron = '';
+          }
           return(
             <div>
-              <Navbar currentPage= {this.state.currentPage} brand= {this.props.brand}/>
-              <Jumbotron heading= {this.props.heading} text= {this.props.text} />
+              <Navbar currentPage= {this.state.currentPage} brand= {this.props.brand} change={this.handleChange} />
+              {jumbotron}
               <Page currentPage= {this.state.currentPage} text='In Canada this is a boot' />
             </div>
           );
